@@ -1,16 +1,19 @@
 import { useState } from "react"
 
-function Coupon({onApply}){
+function Coupon({onApply,travellers}){
   const [code,setCode]=useState("")
   const [status,setStatus]=useState("")
 
   function applyCoupon(){
-    if(code==="NEW10" || code==="NEW20"){
+    if(code==="NEW10" && travellers>=2){
       setStatus("success")
       onApply(code)
-    }else if(code.length>0){
-      setStatus("expired")
-      onApply("")
+    }else if(code==="NEW20" && travellers>=4){
+      setStatus("success")
+      onApply(code)
+    }else{
+      setStatus("error")
+      onApply("")   // ❗ IMPORTANT: clear coupon
     }
   }
 
@@ -28,11 +31,13 @@ function Coupon({onApply}){
       <button onClick={applyCoupon}>Apply</button>
 
       {status==="success" && (
-        <p className="success-text">🎉 Hurray! Coupon applied successfully</p>
+        <p className="success-text">🎉 Hurray! Coupon applied</p>
       )}
 
-      {status==="expired" && (
-        <p className="error-text">Coupon expired or invalid</p>
+      {status==="error" && (
+        <p className="error-text">
+          Coupon not applicable for selected travellers
+        </p>
       )}
     </div>
   )

@@ -13,9 +13,11 @@ function App(){
   const [showSummary,setShowSummary]=useState(false)
 
   useEffect(()=>{
-    let result=calculatePrice(travellers,coupon)
-    setPriceData(result)
-  },[travellers,coupon])
+    if(showSummary){
+      let result=calculatePrice(travellers,coupon)
+      setPriceData(result)
+    }
+  },[travellers,coupon,showSummary])
 
   function applyCoupon(code){
     setCoupon(code)
@@ -26,11 +28,11 @@ function App(){
     <div className="container">
       <div className="header">
         <img src={logo} alt="logo" />
-        {/* <h2>Alert24 Checkout</h2> */}
+        <h2>Alert24 Checkout</h2>
       </div>
 
       <TravellerForm onChange={setTravellers} />
-      <Coupon onApply={applyCoupon} />
+      <Coupon onApply={applyCoupon} travellers={travellers} />
 
       {showSummary && <PriceSummary data={priceData} />}
     </div>

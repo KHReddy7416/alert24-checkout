@@ -6,9 +6,7 @@ export function calculatePrice(travellerCount,coupon){
 
   if(coupon==="NEW10" && travellerCount>=2){
     discount=100
-  }
-
-  if(coupon==="NEW20" && travellerCount>=4){
+  }else if(coupon==="NEW20" && travellerCount>=4){
     discount=200
   }
 
@@ -17,9 +15,9 @@ export function calculatePrice(travellerCount,coupon){
   return{
     travellers:travellerCount,
     ticketTotal:ticketPrice,
-    gst:gst,
-    lifeJacket:lifeJacket,
-    discount:discount,
+    gst,
+    lifeJacket,
+    discount,
     finalAmount:total
   }
 }

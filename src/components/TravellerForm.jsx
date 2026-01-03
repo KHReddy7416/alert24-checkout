@@ -6,6 +6,30 @@ function TravellerForm({onChange}){
   const [date,setDate]=useState("")
   const [travellers,setTravellers]=useState(1)
   const [thumb,setThumb]=useState(false)
+  const [errors,setErrors]=useState({})
+
+  function validateName(value){
+    if(!/^[a-zA-Z\s]*$/.test(value)){
+      setErrors(prev=>({...prev,name:"Name should contain only letters"}))
+    }else{
+      setErrors(prev=>({...prev,name:""}))
+    }
+    setName(value)
+  }
+
+  function validatePhone(value){
+    if(!/^\d*$/.test(value)){
+      return
+    }
+
+    setPhone(value)
+
+    if(value.length!==10){
+      setErrors(prev=>({...prev,phone:"Phone number must be 10 digits"}))
+    }else{
+      setErrors(prev=>({...prev,phone:""}))
+    }
+  }
 
   function addTraveller(){
     let count=travellers+1
@@ -40,16 +64,18 @@ function TravellerForm({onChange}){
         type="text"
         placeholder="Customer Name"
         value={name}
-        onChange={(e)=>setName(e.target.value)}
+        onChange={(e)=>validateName(e.target.value)}
       />
+      {errors.name && <p className="error-text">{errors.name}</p>}
 
       <input
         type="tel"
         placeholder="Contact Number"
-        maxLength="10"
         value={phone}
-        onChange={(e)=>setPhone(e.target.value)}
+        maxLength="10"
+        onChange={(e)=>validatePhone(e.target.value)}
       />
+      {errors.phone && <p className="error-text">{errors.phone}</p>}
 
       <input
         type="date"

@@ -10,18 +10,14 @@ function App(){
   const [travellers,setTravellers]=useState(1)
   const [coupon,setCoupon]=useState("")
   const [priceData,setPriceData]=useState(null)
-  const [showSummary,setShowSummary]=useState(false)
 
   useEffect(()=>{
-    if(showSummary){
-      let result=calculatePrice(travellers,coupon)
-      setPriceData(result)
-    }
-  },[travellers,coupon,showSummary])
+    let result=calculatePrice(travellers,coupon)
+    setPriceData(result)
+  },[travellers,coupon])
 
   function applyCoupon(code){
     setCoupon(code)
-    setShowSummary(true)
   }
 
   return(
@@ -33,8 +29,7 @@ function App(){
 
       <TravellerForm onChange={setTravellers} />
       <Coupon onApply={applyCoupon} travellers={travellers} />
-
-      {showSummary && <PriceSummary data={priceData} />}
+      <PriceSummary data={priceData} />
     </div>
   )
 }

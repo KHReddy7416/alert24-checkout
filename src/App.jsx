@@ -24,7 +24,7 @@ function App(){
     <div className="container">
       <div className="header">
         <img src={logo} alt="logo" />
-        <h2>Alert24 Checkout</h2>
+        <h2></h2>
       </div>
 
       <TravellerForm onChange={setTravellers} />

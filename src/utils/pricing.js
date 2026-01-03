@@ -1,23 +1,37 @@
-export function calculatePrice(travellerCount,coupon){
-  let ticketPrice=travellerCount*1000
-  let gst=(ticketPrice*18)/100
-  let lifeJacket=travellerCount*100
-  let discount=0
+export const COUPONS=[
+  {
+    code:"NEW10",
+    minTravellers:2,
+    discount:100,
+    description:"₹100 off on minimum 2 travellers"
+  },
+  {
+    code:"NEW20",
+    minTravellers:4,
+    discount:200,
+    description:"₹200 off on minimum 4 travellers"
+  }
+]
 
-  if(coupon==="NEW10" && travellerCount>=2){
-    discount=100
-  }else if(coupon==="NEW20" && travellerCount>=4){
-    discount=200
+export function calculatePrice(count,couponCode){
+  const ticket=count*1000
+  const lifeJacket=count*100
+  const gst=Math.round(ticket*0.18)
+
+  let discount=0
+  if(couponCode){
+    const c=COUPONS.find(
+      x=>x.code===couponCode && count>=x.minTravellers
+    )
+    if(c) discount=c.discount
   }
 
-  let total=ticketPrice+gst+lifeJacket-discount
-
   return{
-    travellers:travellerCount,
-    ticketTotal:ticketPrice,
+    travellers:count,
+    ticket,
     gst,
     lifeJacket,
     discount,
-    finalAmount:total
+    total:ticket+gst+lifeJacket-discount
   }
 }

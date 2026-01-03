@@ -1,251 +1,150 @@
-/* =========================
-   GLOBAL
-========================= */
-
-*{
-  box-sizing:border-box;
-}
-
 body{
   margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  background:#f8fafc;
-  color:#0f172a;
-  display:flex;
-  justify-content:center;
+  font-family:system-ui,Arial;
+  background:#f1f5f9;
+  color:#1f2937;
 }
-
-/* =========================
-   APP CONTAINER (MOBILE FIRST)
-========================= */
 
 .container{
-  width:100%;
   max-width:420px;
-  padding:16px;
+  margin:24px auto;
+  padding:14px;
 }
-
-/* =========================
-   HEADER
-========================= */
-
-.header{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.header img{
-  padding-left: 80px;
-  width:300px;
-  height:60px;
-}
-
-.header h2{
-  margin:0;
-  font-size:18px;
-  font-weight:700;
-}
-
-/* =========================
-   CARD
-========================= */
 
 .card{
-  background:#ffffff;
-  padding:18px;
-  border-radius:14px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.08);
-  margin-bottom:18px;
+  background:#fff;
+  border-radius:10px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 6px 16px rgba(0,0,0,.08);
+}
+
+h2{
+  text-align:center;
+  color:#1d4ed8;
 }
 
 h3{
-  margin:0 0 12px;
-  font-size:16px;
-  font-weight:600;
+  margin-bottom:10px;
 }
 
-/* =========================
-   INPUTS
-========================= */
-
-input{
+input,select{
   width:100%;
-  padding:12px;
-  margin-bottom:12px;
-  border-radius:10px;
+  padding:10px;
+  margin:6px 0;
+  border-radius:6px;
   border:1px solid #cbd5e1;
-  font-size:15px;
 }
-
-input:focus{
-  outline:none;
-  border-color:#2563eb;
-  box-shadow:0 0 0 2px rgba(37,99,235,0.15);
-}
-
-/* =========================
-   BUTTONS
-========================= */
 
 button{
   width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
+  padding:11px;
   background:#2563eb;
-  color:#ffffff;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
 }
 
 button:hover{
-  opacity:0.95;
+  background:#1d4ed8;
 }
 
-button:disabled{
-  background:#c7d2fe;
-  cursor:not-allowed;
-}
-
-/* =========================
-   TRAVELLER COUNTER
-========================= */
-
-.traveller-counter{
+.nav-buttons{
   display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:20px;
-  margin:16px 0;
-}
-
-.traveller-counter button{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:#e5edff;
-  color:#1d4ed8;
-  font-size:18px;
-  font-weight:700;
-}
-
-.traveller-counter span{
-  font-size:16px;
-  font-weight:600;
-}
-
-.label{
-  font-size:14px;
-  font-weight:500;
-  color:#475569;
-  margin-bottom:6px;
-}
-
-.traveller-input{
-  width:60px;
-  text-align:center;
-  font-size:15px;
-  font-weight:600;
-  border:1px solid #cbd5e1;
-  border-radius:8px;
-  padding:6px;
-}
-
-
-/* =========================
-   COUPON STATES
-========================= */
-
-.coupon.success{
-  border-left:4px solid #16a34a;
-  background:#f0fdf4;
-}
-
-.coupon.expired{
-  border-left:4px solid #dc2626;
-  background:#fef2f2;
-}
-
-.success-text{
-  color:#16a34a;
-  font-size:13px;
-}
-
-.error-text{
-  color:#dc2626;
-  font-size:13px;
-}
-
-/* =========================
-   PRICE SUMMARY
-========================= */
-
-.price-summary{
-  padding-top:4px;
+  gap:10px;
 }
 
 .summary-row{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  margin:8px 0;
-  font-size:14px;
+  margin:6px 0;
 }
 
-.summary-row span:first-child{
-  color:#475569;
-}
-
-.summary-row span:last-child{
-  font-weight:500;
-}
-
-.summary-row.muted span{
-  color:#64748b;
-}
-
-.summary-row.discount span:last-child{
+.discount{
   color:#16a34a;
+}
+
+.total{
+  font-weight:700;
+}
+
+.error-text{
+  color:#dc2626;
+}
+
+.success-text{
+  color:#16a34a;
+}
+
+.coupon-title{
+  font-weight:600;
+  margin-top:10px;
+}
+
+@media print{
+  button,input,select,.coupon-section{
+    display:none;
+  }
+}
+.success-text{
+  color:#16a34a;
+  font-size:14px;
   font-weight:600;
 }
+/* ===== Custom Payment Options ===== */
+.pay-option{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  margin-bottom:12px;
+  cursor:pointer;
+  background:#ffffff;
+  transition:all .15s ease;
+}
 
-.summary-row.total{
+.pay-option:hover{
+  border-color:#2563eb;
+}
+
+.pay-option.active{
+  border-color:#2563eb;
+  background:#eff6ff;
+}
+
+.pay-option .check{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  border:2px solid #2563eb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  color:#2563eb;
+}
+
+.pay-option .icon{
   font-size:18px;
-  font-weight:700;
-  color:#0f172a;
 }
 
-hr{
-  border:none;
-  border-top:1px solid #e5e7eb;
-  margin:12px 0;
+.pay-option .label{
+  font-size:15px;
+  font-weight:500;
+  color:#1f2937;
 }
 
-.pay-btn{
-  margin-top:14px;
+.ticket-card{
+  border:1px dashed #cbd5e1;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:12px;
+  background:#f8fafc;
 }
 
-/* =========================
-   DESKTOP ENHANCEMENT
-========================= */
-
-@media (min-width:768px){
-  body{
-    background:#e5e7eb;
-  }
-
-  .container{
-    margin-top:24px;
-    border-radius:18px;
-    background:#f8fafc;
-    box-shadow:0 12px 36px rgba(0,0,0,0.15);
-  }
-}
-
-.sticky-summary{
-  position:sticky;
-  bottom:12px;
+.ticket-card h4{
+  margin-bottom:8px;
 }

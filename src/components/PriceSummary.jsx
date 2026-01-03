@@ -1,6 +1,4 @@
 function PriceSummary({data}){
-  if(!data) return null
-
   return(
     <div className="card price-summary">
       <h3>Price Summary</h3>
@@ -10,17 +8,17 @@ function PriceSummary({data}){
         <span>{data.travellers}</span>
       </div>
 
-      <div className="summary-row muted">
+      <div className="summary-row">
         <span>Ticket</span>
-        <span>₹{data.ticketTotal}</span>
+        <span>₹{data.ticket}</span>
       </div>
 
-      <div className="summary-row muted">
+      <div className="summary-row">
         <span>GST</span>
         <span>₹{data.gst}</span>
       </div>
 
-      <div className="summary-row muted">
+      <div className="summary-row">
         <span>Life Jacket</span>
         <span>₹{data.lifeJacket}</span>
       </div>
@@ -34,10 +32,8 @@ function PriceSummary({data}){
 
       <div className="summary-row total">
         <span>Total Payable</span>
-        <span>₹{data.finalAmount}</span>
+        <span>₹{data.total}</span>
       </div>
-
-      <button className="pay-btn">Proceed to Pay</button>
     </div>
   )
 }

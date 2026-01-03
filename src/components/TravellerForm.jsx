@@ -1,110 +1,146 @@
-import { useState,useEffect } from "react"
+import { useState } from "react"
 
-function TravellerForm({onChange,onThumbVerified,onFormValid}){
-  const [name,setName]=useState("")
-  const [phone,setPhone]=useState("")
-  const [date,setDate]=useState("")
-  const [travellers,setTravellers]=useState(1)
-  const [thumb,setThumb]=useState(false)
-  const [errors,setErrors]=useState({})
-
-  useEffect(()=>{
-    const valid =
-      name.trim()!=="" &&
-      phone.length===10 &&
-      date!=="" &&
-      travellers>0
-
-    onFormValid(valid)
-  },[name,phone,date,travellers])
-
-  function validateName(value){
-    if(!/^[a-zA-Z\s]*$/.test(value)){
-      setErrors(prev=>({...prev,name:"Name should contain only letters"}))
-    }else if(value.trim()===""){
-      setErrors(prev=>({...prev,name:"Name is required"}))
-    }else{
-      setErrors(prev=>({...prev,name:""}))
+function TravellerForm({onConfirm}){
+  const [travelDate,setTravelDate]=useState("")
+  const [travellers,setTravellers]=useState([
+    {
+      id:1,
+      name:"",
+      phone:"",
+      gender:"",
+      verified:false,
+      errors:{}
     }
-    setName(value)
+  ])
+
+  function addTraveller(){
+    setTravellers([
+      ...travellers,
+      {
+        id:travellers.length+1,
+        name:"",
+        phone:"",
+        gender:"",
+        verified:false,
+        errors:{}
+      }
+    ])
   }
 
-  function validatePhone(value){
-    if(!/^\d*$/.test(value)) return
+  function update(i,field,value){
+    const list=[...travellers]
 
-    setPhone(value)
-
-    if(value.length!==10){
-      setErrors(prev=>({...prev,phone:"Phone number must be 10 digits"}))
-    }else{
-      setErrors(prev=>({...prev,phone:""}))
+    if(field==="phone"){
+      if(!/^\d*$/.test(value)) return
+      if(value.length>10) return
     }
+
+    list[i][field]=value
+    list[i].errors[field]=""
+    setTravellers(list)
   }
 
-  function handleTraveller(value){
-    let count=parseInt(value)
-    if(!count || count<1) count=1
-    setTravellers(count)
-    onChange(count)
+  function verify(i){
+    const t=travellers[i]
+    const errors={}
+
+    if(!t.name.trim()){
+      errors.name="Name is required"
+    }else if(!/^[A-Za-z ]+$/.test(t.name)){
+      errors.name="Only letters allowed"
+    }
+
+    if(!/^\d{10}$/.test(t.phone)){
+      errors.phone="Enter valid 10-digit phone number"
+    }
+
+    if(Object.keys(errors).length>0){
+      const list=[...travellers]
+      list[i].errors=errors
+      setTravellers(list)
+      return
+    }
+
+    const list=[...travellers]
+    list[i].verified=true
+    list[i].errors={}
+    setTravellers(list)
   }
 
-  function captureThumb(){
-    setThumb(true)
-    onThumbVerified(true)
-  }
-
-  const canVerify =
-    name.trim()!=="" &&
-    phone.length===10 &&
-    date!=="" &&
-    travellers>0
+  const allVerified=
+    travelDate &&
+    travellers.every(t=>t.verified)
 
   return(
     <div className="card">
-      <h3>Traveller Details</h3>
+      <h3>Travel Details</h3>
 
-      <input
-        type="text"
-        placeholder="Customer Name"
-        value={name}
-        onChange={(e)=>validateName(e.target.value)}
-      />
-      {errors.name && <p className="error-text">{errors.name}</p>}
-
-      <input
-        type="tel"
-        placeholder="Contact Number"
-        maxLength="10"
-        value={phone}
-        onChange={(e)=>validatePhone(e.target.value)}
-      />
-      {errors.phone && <p className="error-text">{errors.phone}</p>}
-
-      <p className="label">Travel Date</p>
+      <label>Travel Date</label>
       <input
         type="date"
-        value={date}
         min={new Date().toISOString().split("T")[0]}
-        onChange={(e)=>setDate(e.target.value)}
-      />
-      {!date && <p className="error-text">Please enter travel date</p>}
-
-      <p className="label">Number of Travellers</p>
-      <input
-        type="number"
-        min="1"
-        value={travellers}
-        onChange={(e)=>handleTraveller(e.target.value)}
+        value={travelDate}
+        onChange={e=>setTravelDate(e.target.value)}
       />
 
-      <button onClick={captureThumb} disabled={!canVerify}>
-        {thumb?"Thumbprint Verified":"Capture Thumbprint"}
+      <h3 style={{marginTop:"16px"}}>Traveller Details</h3>
+
+      {travellers.map((t,i)=>(
+        <div key={t.id} className="ticket-card">
+          <h4>Traveller {t.id}</h4>
+
+          <input
+            placeholder="Full Name"
+            value={t.name}
+            onChange={e=>update(i,"name",e.target.value)}
+          />
+          {t.errors.name && (
+            <p className="error-text">{t.errors.name}</p>
+          )}
+
+          <input
+            placeholder="Phone Number"
+            value={t.phone}
+            onChange={e=>update(i,"phone",e.target.value)}
+          />
+          {t.errors.phone && (
+            <p className="error-text">{t.errors.phone}</p>
+          )}
+
+          <select
+            value={t.gender}
+            onChange={e=>update(i,"gender",e.target.value)}
+          >
+            <option value="">Select Gender (optional)</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+
+          {!t.verified ? (
+            <button onClick={()=>verify(i)}>
+              Verify Thumbprint
+            </button>
+          ) : (
+            <p className="success-text">
+              ✔ Thumbprint Verified
+            </p>
+          )}
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={addTraveller}
+        style={{marginBottom:"12px"}}
+      >
+        + Add Traveller
       </button>
 
-      {!canVerify && (
-        <p className="error-text">
-          Please fill all details before verification
-        </p>
+      {allVerified && (
+        <button onClick={()=>onConfirm(travellers)}>
+          Continue
+        </button>
       )}
     </div>
   )

@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 
-function TravellerForm({onChange}){
+function TravellerForm({onChange,onThumbVerified,onFormValid}){
   const [name,setName]=useState("")
   const [phone,setPhone]=useState("")
   const [date,setDate]=useState("")
@@ -8,9 +8,21 @@ function TravellerForm({onChange}){
   const [thumb,setThumb]=useState(false)
   const [errors,setErrors]=useState({})
 
+  useEffect(()=>{
+    const valid =
+      name.trim()!=="" &&
+      phone.length===10 &&
+      date!=="" &&
+      travellers>0
+
+    onFormValid(valid)
+  },[name,phone,date,travellers])
+
   function validateName(value){
     if(!/^[a-zA-Z\s]*$/.test(value)){
       setErrors(prev=>({...prev,name:"Name should contain only letters"}))
+    }else if(value.trim()===""){
+      setErrors(prev=>({...prev,name:"Name is required"}))
     }else{
       setErrors(prev=>({...prev,name:""}))
     }
@@ -18,9 +30,7 @@ function TravellerForm({onChange}){
   }
 
   function validatePhone(value){
-    if(!/^\d*$/.test(value)){
-      return
-    }
+    if(!/^\d*$/.test(value)) return
 
     setPhone(value)
 
@@ -31,21 +41,7 @@ function TravellerForm({onChange}){
     }
   }
 
-  function addTraveller(){
-    let count=travellers+1
-    setTravellers(count)
-    onChange(count)
-  }
-
-  function removeTraveller(){
-    if(travellers>1){
-      let count=travellers-1
-      setTravellers(count)
-      onChange(count)
-    }
-  }
-
-  function handleTravellerInput(value){
+  function handleTraveller(value){
     let count=parseInt(value)
     if(!count || count<1) count=1
     setTravellers(count)
@@ -54,7 +50,14 @@ function TravellerForm({onChange}){
 
   function captureThumb(){
     setThumb(true)
+    onThumbVerified(true)
   }
+
+  const canVerify =
+    name.trim()!=="" &&
+    phone.length===10 &&
+    date!=="" &&
+    travellers>0
 
   return(
     <div className="card">
@@ -71,38 +74,38 @@ function TravellerForm({onChange}){
       <input
         type="tel"
         placeholder="Contact Number"
-        value={phone}
         maxLength="10"
+        value={phone}
         onChange={(e)=>validatePhone(e.target.value)}
       />
       {errors.phone && <p className="error-text">{errors.phone}</p>}
 
+      <p className="label">Travel Date</p>
       <input
         type="date"
         value={date}
         min={new Date().toISOString().split("T")[0]}
         onChange={(e)=>setDate(e.target.value)}
       />
+      {!date && <p className="error-text">Please enter travel date</p>}
 
       <p className="label">Number of Travellers</p>
+      <input
+        type="number"
+        min="1"
+        value={travellers}
+        onChange={(e)=>handleTraveller(e.target.value)}
+      />
 
-      <div className="traveller-counter">
-        <button onClick={removeTraveller}>−</button>
-
-        <input
-          type="number"
-          className="traveller-input"
-          value={travellers}
-          min="1"
-          onChange={(e)=>handleTravellerInput(e.target.value)}
-        />
-
-        <button onClick={addTraveller}>+</button>
-      </div>
-
-      <button onClick={captureThumb}>
-        {thumb?"Thumbprint Captured":"Capture Thumbprint"}
+      <button onClick={captureThumb} disabled={!canVerify}>
+        {thumb?"Thumbprint Verified":"Capture Thumbprint"}
       </button>
+
+      {!canVerify && (
+        <p className="error-text">
+          Please fill all details before verification
+        </p>
+      )}
     </div>
   )
 }
